@@ -9,17 +9,12 @@ const App = () => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('https://myfakeapi.com/api/football/teams');
-      if (response.ok) {
         const data = await response.json();
         setTeams(data.Teams);
-      } else {
-        console.error('Network response was not ok');
-      }
     };
-  
     fetchData();
   }, []);
-  
+
   const handleSearch = event => {
     setSearchTerm(event.target.value);
     setCurrentPage(1); 
@@ -94,5 +89,4 @@ const App = () => {
     </div>
   );
 };
-
 export default App;
