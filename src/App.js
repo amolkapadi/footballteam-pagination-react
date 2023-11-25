@@ -7,30 +7,24 @@ const App = () => {
   const [teamsPerPage] = useState(6);
 
   useEffect(() => {
-    // Fetch data from the new API endpoint
-    fetch('https://myfakeapi.com/api/football/teams')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
+    const fetchData = async () => {
+      const response = await fetch('https://myfakeapi.com/api/football/teams');
+      if (response.ok) {
+        const data = await response.json();
         setTeams(data.Teams);
-      })
-      .catch(error => {
-        console.error('Error fetching data: ', error);
-      });
+      } else {
+        console.error('Network response was not ok');
+      }
+    };
+  
+    fetchData();
   }, []);
-
+  
   const handleSearch = event => {
     setSearchTerm(event.target.value);
-    setCurrentPage(1); // Reset to the first page when performing a search
+    setCurrentPage(1); 
   };
 
-  const indexOfLastTeam = currentPage * teamsPerPage;
-  const indexOfFirstTeam = indexOfLastTeam - teamsPerPage;
-  // const currentTeams = teams.slice(indexOfFirstTeam, indexOfLastTeam);
 
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
@@ -71,7 +65,6 @@ const App = () => {
               />
               <div className="card-body">
                 <h5 className="card-title">{team.name}</h5>
-                {/* You can display more details here if needed */}
               </div>
             </div>
           </div>
