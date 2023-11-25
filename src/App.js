@@ -30,12 +30,19 @@ const App = () => {
 
   const indexOfLastTeam = currentPage * teamsPerPage;
   const indexOfFirstTeam = indexOfLastTeam - teamsPerPage;
-  const currentTeams = teams.slice(indexOfFirstTeam, indexOfLastTeam);
+  // const currentTeams = teams.slice(indexOfFirstTeam, indexOfLastTeam);
 
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
-  const filteredTeams = currentTeams.filter(team =>
+  const filteredTeams = teams.filter(team =>
     team.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const indexOfLastFilteredTeam = currentPage * teamsPerPage;
+  const indexOfFirstFilteredTeam = indexOfLastFilteredTeam - teamsPerPage;
+  const currentFilteredTeams = filteredTeams.slice(
+    indexOfFirstFilteredTeam,
+    indexOfLastFilteredTeam
   );
 
   return (
@@ -53,7 +60,7 @@ const App = () => {
         </div>
       </div>
       <div className="row">
-        {filteredTeams.map(team => (
+        {currentFilteredTeams.map(team => (
           <div key={team.id} className="col-md-4 mb-3">
             <div className="card h-100 p-3">
               <img
@@ -77,17 +84,15 @@ const App = () => {
               Previous
             </button>
           </li>
-          <li className="page-item">
-            <button className="page-link" onClick={() => paginate(1)}>1</button>
-          </li>
-          <li className="page-item">
-            <button className="page-link" onClick={() => paginate(2)}>2</button>
-          </li>
-          <li className="page-item">
-            <button className="page-link" onClick={() => paginate(3)}>3</button>
-          </li>
-          <li className={`page-item ${currentTeams.length < teamsPerPage ? 'disabled' : ''}`}>
-            <button className="page-link" onClick={() => paginate(currentPage + 1)} disabled={currentTeams.length < teamsPerPage}>
+          {Array.from({ length: Math.ceil(filteredTeams.length / teamsPerPage) }, (_, i) => (
+            <li key={i} className="page-item">
+              <button className="page-link" onClick={() => paginate(i + 1)}>
+                {i + 1}
+              </button>
+            </li>
+          ))}
+          <li className={`page-item ${currentFilteredTeams.length < teamsPerPage ? 'disabled' : ''}`}>
+            <button className="page-link" onClick={() => paginate(currentPage + 1)} disabled={currentFilteredTeams.length < teamsPerPage}>
               Next
             </button>
           </li>
